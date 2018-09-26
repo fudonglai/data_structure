@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 
 #define TRUE 1
 #define FALSE 0
@@ -16,6 +15,7 @@ typedef int Status;
 typedef int ElemType;
 typedef ElemType* List;
 
+/* Linear List */
 Status InitList(List L);
 Status DestroyList(List L);
 Status ClearList(List L);
@@ -59,7 +59,7 @@ Status MergeList(List La, List Lb){
     return OK;
 }// MergeList
 
-
+/* Sequence List */
 typedef struct {
     ElemType *elem;
     int      length;     //number of elements
@@ -102,7 +102,7 @@ int LocateElem_Sq(SqList L, ElemType e, Status (*compare)(ElemType, ElemType)){
     return -1;
 }
 
-Status MergeList_Sq(SqList La, SqList Lb, SqList Lc){
+void MergeList_Sq(SqList La, SqList Lb, SqList Lc){
     ElemType *pa = La.elem, *pb = Lb.elem;
     int i = 1, j = 1, k =0;
     while (i <= La.length && j <= Lb.length){
@@ -117,10 +117,9 @@ Status MergeList_Sq(SqList La, SqList Lb, SqList Lc){
         ListInsert_Sq(Lc, k++, *(pa++));
     while (j++ <= Lb.length)
         ListInsert_Sq(Lc, k++, *(pb++));
-    return OK;
 }
 
-
+/* Linked List */
 typedef struct LNode{
     ElemType       data;
     struct LNode*  next;
@@ -185,6 +184,7 @@ void MergeList_L(LinkList La, LinkList Lb, LinkList Lc){
 }
 
 
+/* Static List */
 typedef struct {
     ElemType  data;
     int       cur;
@@ -245,6 +245,73 @@ void difference(SLinkList space, int S){  //(A - B)U(B - A)
 
         } else{
             Free_SL(space, p2);
+        }
+    }
+}
+
+/* Dual Linked List */
+typedef struct DulNode{
+    ElemType          data;
+    struct DulNode   *prior;
+    struct DulNode   *next;
+}DulNode, *DulLinkList;
+
+Status ListInsert_DuL(DulLinkList L, int i, ElemType e){
+    DulNode* p = L;
+    DulNode* s = (DulNode*)malloc(sizeof(DulNode));
+    while (p && --i - 1)
+        p = p->next;  // p points to the previous node
+    s->data = e; s->prior = p; s->next = p->next;
+    p->next->prior = s; p->next = s;
+    return OK;
+}
+
+Status ListDelete_DuL(DulLinkList L, int i, ElemType* e){
+    DulNode* p = L;
+    while (p && --i)
+        p = p->next;  // p points to i'th node
+    if (p == NULL)
+        exit(ERROR);
+    *e = p->data;
+    p->prior->next = p->next;
+    p->next->prior = p->prior;
+    p->next = p->prior = NULL;
+    free(p);
+    return OK;
+}
+
+typedef struct Term{
+    float         coef;
+    int           expn;
+    struct Term  *next;
+} Term, *Polynomial;
+
+int CompareExp(Term a, Term b){
+    switch (a.expn % b.expn){
+        case 1:
+            return 0;
+        case 0:
+            return -1;
+        default:
+            return 1;
+    }
+}
+
+void AddPolynomial(Polynomial Pa, Polynomial Pb){
+    Term *ta = Pa->next, *tb = Pb->next;
+    Term *p = NULL, *q = NULL;
+    while (ta && tb){
+        switch (CompareExp(*ta, *tb)){
+            case 1:
+                p = tb->next; tb->next = ta; tb = p; q = ta->next; ta->next = p; ta = q;
+                break;// a greater than b
+            case -1:
+                p = ta->next; ta->next = tb; ta = p; q = tb->next; tb->next = p; tb = q;
+                break;
+            case 0:
+                ta->coef += tb->coef; p = tb; tb = tb->next; ta = ta->next; free(p);
+                break;
+            default: break;
         }
     }
 }

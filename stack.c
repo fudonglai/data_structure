@@ -161,3 +161,20 @@ Status MazePath(Maze maze, Pos start, Pos end){
     }while (curPos != end);
     return OK;
 }
+
+
+/* Hanoi */
+typedef char From, To, By;
+typedef int No;
+void move(From , No , To);
+void hanoi(int, From, By, To);
+
+void hanoi(int n, From x, By y, To z){
+    if (n == 1)
+        move(x, 1, z);
+    else{  // 精彩异常。自顶向下传递，自下向上回归。
+        hanoi(n - 1, x, z, y);
+        move(x, n, z);
+        hanoi(n - 1, y, x, z);
+    }
+}

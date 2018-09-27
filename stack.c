@@ -96,3 +96,68 @@ void LineEdit(){
     }
     DestroyStack(S);
 }
+
+
+/* MazePath */
+
+typedef int Dir;
+typedef int* Pos;
+typedef int Maze[10][10];
+typedef struct {
+    int    ord;
+    Dir    dir;
+    Pos    pos;
+}MElemType;
+
+typedef struct {
+    MElemType *base;
+    MElemType *top;
+    int        stack_size;
+}*MSqStack;
+
+Status MPush(SqStack S, MElemType e);
+Status MPop(SqStack S, MElemType *e);
+
+void FootPrint(Pos pos);
+int Pass(Pos pos, Dir d);
+Status NextStep(MSqStack S, MElemType* e){
+    MElemType top = *(S->top - 1);
+    switch (top.dir){
+        case 1:
+            if (Pass(top.pos, ++top.dir)){
+                top.pos[0]++;
+                top.ord++;
+                FootPrint(top.pos);
+                break;
+            }
+        case 2:
+            break;
+        case 3:
+            break;
+        default:
+            return 0;
+    }
+} // if fail then return 0
+int LookAround(Maze maze, int pos[2]){
+
+}
+
+Status MazePath(Maze maze, Pos start, Pos end){
+    SqStack S = NULL;
+    Pos curPos = start;
+    int curStep = 1;
+    MElemType e = {curStep, 1, curPos};
+    InitSqStack(S);
+    MPush(S, e);
+
+    do{
+        if (NextStep(S, &e))
+            MPush(S, e);
+        else
+            MPop(S, &e);
+
+        if (S->top != S->base + 1)
+            exit(ERROR);
+    }while (curPos != end);
+    return OK;
+}

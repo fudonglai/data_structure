@@ -131,16 +131,30 @@ Status NextStep(MSqStack S, MElemType* e){
                 break;
             }
         case 2:
-            break;
+            if (Pass(top.pos, ++top.dir)) {
+                top.pos[1]++;
+                top.ord++;
+                FootPrint(top.pos);
+                break;
+            }
         case 3:
-            break;
+            if (Pass(top.pos, ++top.dir)) {
+                top.pos[0]--;
+                top.ord++;
+                FootPrint(top.pos);
+                break;
+            }
+        case 4:
+            if (Pass(top.pos, ++top.dir)) {
+                top.pos[1]--;
+                top.ord++;
+                FootPrint(top.pos);
+                break;
+            }
         default:
             return 0;
     }
 } // if fail then return 0
-int LookAround(Maze maze, int pos[2]){
-
-}
 
 Status MazePath(Maze maze, Pos start, Pos end){
     SqStack S = NULL;

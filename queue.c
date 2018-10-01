@@ -9,7 +9,11 @@
 #define OVERFLOW 2
 
 typedef int Status;
-typedef int QElemType;
+//typedef int QElemType;
+typedef struct {
+    int ArrivalTime;
+    int Duration;
+}QElemType;
 
 typedef struct QNode{
     struct QNode  *next;
@@ -101,3 +105,49 @@ Status SqDeQueue(SqQueue Q, QElemType *e){
     Q.front = (Q.front + 1) % MAXSIZE;
     return OK;
 }
+
+/* discrete event simulation */
+void OpenForDay();
+int MoreEvent();
+void EventDriver(int, int);
+void Invalid();
+
+void BankSimulation(int CloseTime){
+    OpenForDay();
+    while (MoreEvent()){
+        int OccurTime, EventType;
+        EventDriver(OccurTime, EventType);
+        switch (EventType){
+            case 'A':
+                break;
+            case 'D':
+                break;
+            default:Invalid();
+                break;
+        }
+    }
+}
+
+typedef struct {
+    int OccurTime;
+    int NType;  // 0 presents arrival, 1-4 presents departure
+}Event, ElemType;
+
+typedef struct LNode{
+    ElemType       data;
+    struct LNode*  next;
+}LNode, *LinkList;
+
+typedef struct {
+    int ArrivalTime;
+    int Duration;
+}QElemType;
+
+typedef LinkList EventList;
+
+EventList ev;
+Event     en;
+LinkQueue q[5];
+QElemType customer;
+int TotalTime, CustomerNum;
+

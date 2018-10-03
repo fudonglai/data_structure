@@ -192,6 +192,3 @@ void hanoi(int n, From x, By y, To z){
         hanoi(n - 1, y, x, z);
     }
 }
-
-
-typedef
